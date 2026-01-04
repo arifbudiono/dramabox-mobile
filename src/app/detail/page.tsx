@@ -7,13 +7,18 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 function DetailContent() {
   const searchParams = useSearchParams();
   const bookId = searchParams.get("bookId");
   const router = useRouter();
   const { data, isLoading, error } = useDramaDetail(bookId || "");
+
+  // Debug logging
+  useEffect(() => {
+    console.log("DetailPage - bookId from URL:", bookId);
+  }, [bookId]);
 
   if (isLoading) {
     return <DetailSkeleton />;

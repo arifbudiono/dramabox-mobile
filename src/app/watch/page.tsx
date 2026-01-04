@@ -29,6 +29,12 @@ function WatchContent() {
   const { data: detailData, isLoading: detailLoading } = useDramaDetail(bookId || "");
   const { data: episodes, isLoading: episodesLoading } = useEpisodes(bookId || "");
 
+  // Debug logging
+  useEffect(() => {
+    console.log("WatchPage - bookId from URL:", bookId);
+    console.log("WatchPage - All search params:", Object.fromEntries(searchParams.entries()));
+  }, [bookId, searchParams]);
+
   // Initialize from URL params
   useEffect(() => {
     const ep = parseInt(searchParams.get("ep") || "0", 10);
@@ -298,8 +304,8 @@ function WatchContent() {
                   key={episode.chapterId}
                   onClick={() => handleEpisodeChange(episode.chapterIndex)}
                   className={`relative aspect-square rounded-lg font-medium text-sm transition-all hover:scale-105 ${currentEpisode === episode.chapterIndex
-                      ? "bg-primary text-primary-foreground shadow-lg"
-                      : "bg-muted hover:bg-muted/80"
+                    ? "bg-primary text-primary-foreground shadow-lg"
+                    : "bg-muted hover:bg-muted/80"
                     }`}
                 >
                   {episode.chapterIndex + 1}
