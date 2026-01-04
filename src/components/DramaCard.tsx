@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Play, Flame } from "lucide-react";
 import type { Drama } from "@/types/drama";
 
@@ -10,11 +12,16 @@ interface DramaCardProps {
 export function DramaCard({ drama, index = 0 }: DramaCardProps) {
   const coverUrl = drama.coverWap || drama.cover;
   const tags = drama.tags || drama.tagNames || [];
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/detail?bookId=${encodeURIComponent(drama.bookId)}`);
+  };
 
   return (
-    <Link
-      href={`/detail?bookId=${drama.bookId}`}
-      className="group relative rounded-2xl overflow-hidden card-hover animate-fade-up block"
+    <div
+      onClick={handleClick}
+      className="group relative rounded-2xl overflow-hidden card-hover animate-fade-up block cursor-pointer"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Cover Image */}
@@ -89,6 +96,6 @@ export function DramaCard({ drama, index = 0 }: DramaCardProps) {
           ))}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
