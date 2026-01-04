@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+
+# Next.js
+.next
+out
+build
+
+# Android/Capacitor generated
+# We DO want to commit the android folder structure, but not the build artifacts within it
+# (The android folder usually has its own .gitignore, but adding some safety here)
+android/app/build
+android/.gradle
+android/local.properties
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
