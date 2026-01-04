@@ -15,7 +15,8 @@ export function DramaCard({ drama, index = 0 }: DramaCardProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/detail?bookId=${encodeURIComponent(drama.bookId)}`);
+    // Use hash-based routing for static export compatibility
+    window.location.href = `/detail#${encodeURIComponent(drama.bookId)}`;
   };
 
   return (

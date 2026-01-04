@@ -4,20 +4,28 @@ import { useDramaDetail } from "@/hooks/useDramaDetail";
 import { Play, Eye, Heart, Calendar, ChevronLeft, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 function DetailContent() {
-  const searchParams = useSearchParams();
-  const bookId = searchParams.get("bookId");
   const router = useRouter();
+  const [bookId, setBookId] = useState<string | null>(null);
+
+  // Read bookId from hash
+  useEffect(() => {
+    const hash = window.location.hash.substring(1); // Remove #
+    const decodedId = decodeURIComponent(hash);
+    console.log("DetailPage - bookId from hash:", decodedId);
+    setBookId(decodedId);
+  }, []);
+
   const { data, isLoading, error } = useDramaDetail(bookId || "");
 
   // Debug logging
   useEffect(() => {
-    console.log("DetailPage - bookId from URL:", bookId);
+    console.log("DetailPage - bookId state:", bookId);
   }, [bookId]);
 
   if (isLoading) {
@@ -78,13 +86,13 @@ function DetailContent() {
                 className="w-full max-w-[300px] mx-auto rounded-2xl shadow-2xl"
               />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
-                <Link
-                  href={`/watch?bookId=${book.bookId}`}
+                <button
+                  onClick={() => window.location.href = `/watch#${book.bookId}`}
                   className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold flex items-center gap-2 hover:scale-105 transition-transform shadow-lg"
                 >
                   <Play className="w-5 h-5 fill-current" />
                   Tonton Sekarang
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -164,14 +172,14 @@ function DetailContent() {
               )}
 
               {/* Watch Button */}
-              <Link
-                href={`/watch?bookId=${book.bookId}`}
+              <button
+                onClick={() => window.location.href = `/watch#${book.bookId}`}
                 className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-primary-foreground transition-all hover:scale-105 shadow-lg"
                 style={{ background: "var(--gradient-primary)" }}
               >
                 <Play className="w-5 h-5 fill-current" />
                 Mulai Menonton
-              </Link>
+              </button>
             </div>
           </div>
         </div>

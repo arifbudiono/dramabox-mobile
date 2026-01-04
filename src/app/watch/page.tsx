@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useDramaDetail, useEpisodes } from "@/hooks/useDramaDetail";
 import { ChevronLeft, ChevronRight, Play, Loader2, Settings } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,31 +18,30 @@ const EPISODES_PER_PAGE = 30;
 import { Suspense } from "react";
 
 function WatchContent() {
-  const searchParams = useSearchParams();
-  const bookId = searchParams.get("bookId");
   const router = useRouter();
+  const [bookId, setBookId] = useState<string | null>(null);
   const [currentEpisode, setCurrentEpisode] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [quality, setQuality] = useState(720);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Read bookId from hash
+  useEffect(() => {
+    const hash = window.location.hash.substring(1); // Remove #
+    const decodedId = decodeURIComponent(hash);
+    console.log("WatchPage - bookId from hash:", decodedId);
+    setBookId(decodedId);
+  }, []);
 
   const { data: detailData, isLoading: detailLoading } = useDramaDetail(bookId || "");
   const { data: episodes, isLoading: episodesLoading } = useEpisodes(bookId || "");
 
   // Debug logging
   useEffect(() => {
-    console.log("WatchPage - bookId from URL:", bookId);
-    console.log("WatchPage - All search params:", Object.fromEntries(searchParams.entries()));
-  }, [bookId, searchParams]);
+    console.log("WatchPage - bookId state:", bookId);
+  }, [bookId]);
 
-  // Initialize from URL params
-  useEffect(() => {
-    const ep = parseInt(searchParams.get("ep") || "0", 10);
-    if (ep >= 0) {
-      setCurrentEpisode(ep);
-      setCurrentPage(Math.floor(ep / EPISODES_PER_PAGE));
-    }
-  }, [searchParams]);
+  // Initialize from URL params - removed since we're using hash now
 
   // Update URL when episode changes
   const handleEpisodeChange = (index: number) => {
